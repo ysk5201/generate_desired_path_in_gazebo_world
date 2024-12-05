@@ -4,6 +4,7 @@ import math
 
 MODEL_TEMPLATE = """
     <model name='unit_box_{index}'>
+      <static>true</static>
       <pose>{x} {y} 0 0 0 {th}</pose>
       <link name='link'>
         <collision name='collision'>
@@ -54,6 +55,11 @@ WORLD_TEMPLATE = """<?xml version="1.0" ?>
       <uri>model://ground_plane</uri>
     </include>
     {models}
+    <gui>
+      <camera name="user_camera">
+        <pose>{view_point_x} {view_point_y} {view_point_z} 0 1.57 1.57 0</pose>
+      </camera>
+    </gui>
   </world>
 </sdf>
 """
@@ -94,10 +100,10 @@ def generate_models(coordinates, length, width, height):
             models.append(MODEL_TEMPLATE.format(index=index, x=x, y=y, th=th, length=obj_length, width=width, height=height))
     return "\n".join(models)
 
-def create_world_file(output_path, models):
+def create_world_file(output_path, models, view_point_x, view_point_y, view_point_z):
     """worldファイルを生成"""
     with open(output_path, mode='w') as file:
-        file.write(WORLD_TEMPLATE.format(models=models))
+        file.write(WORLD_TEMPLATE.format(models=models, view_point_x=view_point_x, view_point_y=view_point_y, view_point_z=view_point_z))
 
 def main():
     # 入力CSVファイル
@@ -105,9 +111,15 @@ def main():
     # 出力worldファイル
     output_world = "bezier_box.world"
 
+    # 経路用に使う直方体のパラメータ
     length = 0.24
     width  = 0.05
     height = 0.0005
+
+    # 視点位置(上から真下を見下ろす)
+    view_point_x = 4
+    view_point_y = 4
+    view_point_z = 20
 
     # CSVから座標を読み込む
     coordinates = read_csv(input_csv)
@@ -116,7 +128,7 @@ def main():
     models = generate_models(coordinates, length, width, height)
 
     # worldファイルを生成
-    create_world_file(output_world, models)
+    create_world_file(output_world, models, view_point_x, view_point_y, view_point_z)
 
     print(f"Worldファイルが生成されました: {output_world}")
 
