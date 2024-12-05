@@ -28,7 +28,7 @@ MODEL_TEMPLATE = """
         <visual name='visual'>
           <geometry>
             <cylinder>
-              <radius>0.1</radius>
+              <radius>0.04</radius>
               <length>0.0005</length>
             </cylinder>
           </geometry>
@@ -85,7 +85,7 @@ def main():
     # 入力CSVファイル
     input_csv = "bezier_curve_x_y.csv"
     # 出力worldファイル
-    output_world = "output.world"
+    output_world = "bezier_cylinder.world"
 
     # CSVから座標を読み込む
     coordinates = read_csv(input_csv)
